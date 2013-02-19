@@ -36,6 +36,24 @@ indicators = [None, None, 'DegC', None,
             ['RS232', 'AUTO', 'DC', 'AC']
 
 def read_meter(port):
+  """
+  Read a CyrusTek compatible multimeter on on a serial port port.  Returns
+  (digit_string, indicators)
+
+  port -> The serial port device to read from
+  
+  digit_string <- A string representation of the digits on the display usually
+  suitable for passing to float().  If the measured value is off-scale low,
+  digit_string will be 'L'.
+
+  indicators <- A list of strings in the set:
+  ['DegC', 'Batt', 'Hz', 'V', 'A', 'Hold', 'REL', 'Ohm', 'F', 'Sound', 'M', '%',
+  'm', 'Diode', 'k', 'n', 'u', 'RS232', 'AUTO', 'DC', 'AC']
+  representing the LCD indicators that are currently lit on the multimeter's
+  display.
+  """
+  
+  
   ser = Serial(port, 2400)
   try:
       byte = ser.read()
@@ -65,6 +83,7 @@ def read_meter(port):
       return digitstr, active_indicators
   finally:
       ser.close()
- 
-for i in range(100):
-  print read_meter('/dev/cu.usbserial')
+
+if __name__ == '__main__':
+  for i in range(100):
+    print read_meter('/dev/cu.usbserial')
